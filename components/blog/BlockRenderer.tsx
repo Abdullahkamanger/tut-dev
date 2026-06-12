@@ -1,4 +1,7 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 
 interface BlockData {
   level?: number;
@@ -29,6 +32,64 @@ interface Block {
 interface BlockRendererProps {
   blocks: Block[];
 }
+
+// ---------------------------------------------------------------------------
+// CodeBlock — shows code with a one-click copy button in the top-right corner
+// ---------------------------------------------------------------------------
+const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const el = document.createElement('textarea');
+      el.value = code;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <div className="relative group my-6">
+      {/* Copy button */}
+      <button
+        onClick={handleCopy}
+        aria-label="Copy code"
+        className={`
+          absolute top-3 right-3 z-10
+          flex items-center gap-1.5 px-2.5 py-1.5
+          rounded-lg text-xs font-medium
+          transition-all duration-200
+          opacity-0 group-hover:opacity-100 focus:opacity-100
+          ${
+            copied
+              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+              : 'bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white'
+          }
+        `}
+      >
+        {copied ? (
+          <><Check size={13} /> Copied!</>
+        ) : (
+          <><Copy size={13} /> Copy</>
+        )}
+      </button>
+
+      <pre className="bg-slate-900 dark:bg-slate-950 text-emerald-400 rounded-2xl p-6 pt-10 overflow-x-auto text-sm font-mono">
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+};
+
 
 const BlockRenderer: React.FC<BlockRendererProps> = ({ blocks }) => {
   if (!blocks || blocks.length === 0) return null;
@@ -225,14 +286,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ blocks }) => {
             );
 
           case 'code':
-            return (
-              <pre
-                key={index}
-                className="bg-slate-900 dark:bg-slate-950 text-emerald-400 rounded-2xl p-6 overflow-x-auto my-6 text-sm font-mono"
-              >
-                <code>{block.data.code}</code>
-              </pre>
-            );
+            return <CodeBlock key={index} code={block.data.code || ''} />;
 
           case 'table': {
             const rows = block.data.content || [];
