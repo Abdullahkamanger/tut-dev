@@ -39,6 +39,8 @@ interface Blog {
 
 const BlogDetail: React.FC = () => {
   const [copied, setCopied] = useState<boolean>(false);
+  const [fetchedBlog, setFetchedBlog] = useState<any>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
   const params = useParams();
   const id = params?.id as string;
   
@@ -48,6 +50,7 @@ const BlogDetail: React.FC = () => {
 
   const {
     blogs,
+    loading: blogsLoading,
     likedIds,
     savedIds,
     dislikedIds,
@@ -71,7 +74,56 @@ const BlogDetail: React.FC = () => {
     }
   }, [id]);
 
-  const blog = blogs?.find((b: any) => b.id === blogId || b.id === numericId || b._id === blogId);
+  const blogInContext = blogs?.find((b: any) => b.id === blogId || b.id === numericId || b._id === blogId);
+
+  useEffect(() => {
+    if (!blogsLoading && !blogInContext && !fetchedBlog && !isFetching) {
+      const fetchBlog = async () => {
+        setIsFetching(true);
+        try {
+          const res = await fetch(`/api/blogs/${id}`);
+          if (res.ok) {
+            const data = await res.json();
+            // Normalize the raw API response to match the context blog shape
+            setFetchedBlog({
+              ...data,
+              id: data._id,
+              image: data.cover_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800',
+              author: {
+                id: data.author?.id || '',
+                name: data.author?.name || data.author_name || 'Unknown Author',
+                role: data.author?.role || 'Author',
+                seed: data.author?.name || data.author_name || 'Author',
+                description: data.author?.bio || null,
+                social_links: data.author?.social_links || {},
+              },
+              date: new Date(data.created_at).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              }),
+              likes: data.likes_count || 0,
+              dislikes: data.dislikes_count || 0,
+              saves: data.saves_count || 0,
+            });
+          }
+        } catch (err) {
+          console.error("Failed to fetch blog:", err);
+        } finally {
+          setIsFetching(false);
+        }
+      };
+      fetchBlog();
+    }
+  }, [blogsLoading, blogInContext, id, fetchedBlog, isFetching]);
+
+  if (blogsLoading || isFetching) return (
+    <div className="flex justify-center items-center py-20 text-indigo-600">
+      <Loader2 className="animate-spin w-10 h-10" />
+    </div>
+  );
+
+  const blog = blogInContext || fetchedBlog;
 
   if (!blog) return <div className="text-center py-20 text-slate-800 dark:text-slate-200">Blog not found.</div>;
 
