@@ -33,7 +33,16 @@ function CreatePostContent() {
   const [currentDraftId, setCurrentDraftId] = useState<string | null>(draftId);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const autoSaveRef = useRef<NodeJS.Timeout | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isLoadingDraft, setIsLoadingDraft] = useState<boolean>(!!draftId);
+
+  // Auto-resize textarea when title changes (e.g. when draft is loaded)
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [title]);
 
   // Extract headings for the dynamic sidebar
   const milestones: Milestone[] = blocks.filter((b) => b.type === 'header') as Milestone[];
@@ -254,6 +263,7 @@ function CreatePostContent() {
               type="text"
               placeholder="Paste image URL here..."
               className="absolute bottom-4 left-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm px-4 py-2 rounded-xl text-xs outline-none border border-slate-200 dark:border-slate-700 shadow-xl text-slate-800 dark:text-slate-200"
+              value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
             />
           </div>
@@ -261,9 +271,11 @@ function CreatePostContent() {
           {/* Title Area */}
           <div className="mb-12 group">
             <textarea
+              ref={textareaRef}
               placeholder="Enter your title..."
               rows={1}
               className="text-4xl md:text-6xl font-black w-full bg-transparent outline-none text-slate-900 dark:text-white placeholder:text-slate-200 dark:placeholder:text-slate-800 resize-none overflow-hidden"
+              value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
                 e.target.style.height = 'auto';
@@ -275,7 +287,11 @@ function CreatePostContent() {
 
           {/* Editor Canvas */}
           <div className="bg-white dark:bg-slate-900/50 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-none min-h-[800px]">
-            <Editor onChange={handleEditorChange} />
+            {!isLoadingDraft ? (
+              <Editor data={{ blocks }} onChange={handleEditorChange} />
+            ) : (
+              <div className="h-96 flex items-center justify-center">Loading editor...</div>
+            )}
           </div>
 
           {/* Bottom Tip */}
