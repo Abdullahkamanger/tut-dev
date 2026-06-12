@@ -120,7 +120,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, searchQuery = "" }) => {
                 {isLoading ? (
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
-                  <ThumbsDown size={18} fill={isDisliked ? "currentColor" : "none"} />
+                  <ThumbsDown size={18} fill={isDisliked ? "#94a3b8" : "none"} />
                 )}
               </button>
               <span className="text-xs font-semibold">{blog.dislikes}</span>
