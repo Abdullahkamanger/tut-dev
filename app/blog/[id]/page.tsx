@@ -67,6 +67,15 @@ const BlogDetail: React.FC = () => {
 
   const router = useRouter();
 
+  // Scroll hooks must be called unconditionally (Rules of Hooks)
+  const { scrollYProgress, scrollY } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+
   // Instantly reset scroll position on navigation
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -130,15 +139,6 @@ const BlogDetail: React.FC = () => {
   const relatedBlogs = blogs
     ?.filter((b: any) => b.category === blog.category && (b.id !== blogId && b.id !== numericId))
     .slice(0, 3) || [];
-
-  const { scrollYProgress, scrollY } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
