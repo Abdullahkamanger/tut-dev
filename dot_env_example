@@ -1,5 +1,5 @@
-MONGO_URI=
-AUTH_SECRET=
+MONGO_URI=mongodb://localhost:27017/tut_dev
+AUTH_SECRET=abdullah
 AUTH_URL=http://localhost:3000
 GITHUB_ID=
 GITHUB_SECRET=
