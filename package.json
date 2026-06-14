@@ -1,6 +1,6 @@
 {
-  "name": "blog_plateform_updated",
-  "version": "0.1.0",
+  "name": "tut-dev",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,12 +20,14 @@
     "@editorjs/quote": "^2.7.6",
     "@editorjs/table": "^2.4.5",
     "axios": "^1.16.0",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
     "mongoose": "^9.6.1",
     "next": "16.2.4",
     "next-auth": "5.0.0-beta.31",
+    "nodemailer": "^8.0.11",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-helmet-async": "^3.0.0",
@@ -34,7 +36,9 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

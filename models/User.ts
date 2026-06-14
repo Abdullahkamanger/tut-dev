@@ -37,7 +37,10 @@ const UserSchema: Schema = new Schema({
     linkedin: { type: String, default: null },
     website: { type: String, default: null },
   },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  resetOtp: { type: String, default: null },       // Hashed 6-digit OTP
+  resetOtpExpires: { type: Date, default: null },  // Timestamp when OTP expires
+
 });
 
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

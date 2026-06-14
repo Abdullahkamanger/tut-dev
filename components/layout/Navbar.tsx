@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-              ModernBlog
+              Tut-Dev
             </Link>
 
             {/* Desktop Links */}
@@ -72,6 +72,7 @@ const Navbar: React.FC = () => {
                     <>
                       <Link href="/author" className="text-indigo-600 font-bold border-r border-slate-300 dark:border-slate-600 pr-4">Dashboard</Link>
                       <Link href="/create" className="text-emerald-600 font-bold border-r border-slate-300 dark:border-slate-600 pr-4">Write Post</Link>
+                      <Link href="/profile" className="text-blue-600 font-bold border-r border-slate-300 dark:border-slate-600 pr-4">Profile</Link>
                     </>
                   )}
                   {user.status === 'PENDING' && (

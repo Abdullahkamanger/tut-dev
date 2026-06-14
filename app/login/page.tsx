@@ -132,6 +132,13 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
+        
+         <p className="text-center text-slate-500 dark:text-slate-400 mt-3">
+          Forgot your password?{' '}
+          <Link href="/forgot-password" className="text-indigo-600 dark:text-indigo-400 font-bold">
+            Reset your password here
+          </Link>
+        </p>
 
         <div className="mt-6">
           <button
