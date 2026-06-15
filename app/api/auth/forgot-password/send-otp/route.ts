@@ -46,6 +46,33 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check Rate Limit: Has user requested OTP in the last 24 hours?
+
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    // Filter out requests older than 24 hours
+    const recentRequests = (user.otpRequests || []).filter(
+      (timestamp: Date) => new Date(timestamp) > twentyFourHoursAgo
+    );
+
+    // CRITICAL GATE: Restrict to 3 requests per 24 hours
+    if (recentRequests.length >= 3) {
+      return NextResponse.json(
+        { message: 'Too many OTP requests. Please try again after 24 hours.' },
+        { status: 429 } // 429 is the standard HTTP code for Too Many Requests
+      );
+    }
+
+    // Add the current request timestamp to the tracking list
+    recentRequests.push(now);
+
+
+
+
+
+
+
     // 4. Generate a random secure 6-digit numeric string
     const otp = crypto.randomInt(100000, 999999).toString();
 
@@ -63,6 +90,8 @@ export async function POST(request: Request) {
         $set: {
           resetOtp: hashedOtp,
           resetOtpExpires: otpExpiry,
+          otpFailedAttempts: 0, // Reset counter for new token
+          otpRequests: recentRequests // Update our 24-hour timestamp log
         },
       }
     );

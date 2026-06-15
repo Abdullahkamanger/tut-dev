@@ -3,12 +3,10 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock } from 'lucide-react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useBlogs } from '../../context/BlogContext';
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
@@ -132,8 +130,8 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
-        
-         <p className="text-center text-slate-500 dark:text-slate-400 mt-3">
+
+        <p className="text-center text-slate-500 dark:text-slate-400 mt-3">
           Forgot your password?{' '}
           <Link href="/forgot-password" className="text-indigo-600 dark:text-indigo-400 font-bold">
             Reset your password here

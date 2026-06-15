@@ -40,6 +40,8 @@ const UserSchema: Schema = new Schema({
   created_at: { type: Date, default: Date.now },
   resetOtp: { type: String, default: null },       // Hashed 6-digit OTP
   resetOtpExpires: { type: Date, default: null },  // Timestamp when OTP expires
+  otpFailedAttempts: { type: Number, default: 0 }, // Track bad guesses
+  otpRequests: [Date] // Array of timestamps when an OTP was requested
 
 });
 

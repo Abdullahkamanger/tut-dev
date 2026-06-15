@@ -43,10 +43,39 @@ export async function POST(request: Request) {
     const isOtpMatch = await bcrypt.compare(otp, user.resetOtp);
 
     if (!isOtpMatch) {
-      return NextResponse.json(
-        { message: 'Invalid or expired OTP.' },
-        { status: 400 }
-      );
+      const updatedAttempts = (user.otpFailedAttempts || 0) + 1;
+      const maxAttempts = 3;
+      const attemptsLeft = Math.max(0, maxAttempts - updatedAttempts);
+
+      if (updatedAttempts >= maxAttempts) {
+        // CRITICAL ACTION: Burn the OTP out of the database immediately
+        await User.updateOne(
+          { email: email.toLowerCase() },
+          {
+            $set: { otpFailedAttempts: updatedAttempts },
+            $unset: { resetOtp: 1, resetOtpExpires: 1 } // Instantly expires the token data
+          }
+        );
+        return NextResponse.json(
+          { message: 'Too many incorrect attempts. This OTP has been invalidated. Please request a new one.' },
+          { status: 400 }
+        );
+      } else {
+        // Increment the failed count but keep the OTP alive
+        await User.updateOne(
+          { email: email.toLowerCase() },
+          { $set: { otpFailedAttempts: updatedAttempts } }
+        );
+        return NextResponse.json({
+          message: 'Invalid or expired OTP.',
+          attemptsLeft,
+
+        }, { status: 400 });
+      }
+
+
+
+
     }
 
     // 6. If valid, return a clean success response.
