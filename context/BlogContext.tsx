@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { mockBlogs as initialData } from '../data/mockBlogs'; // Adjust path if needed
+//import { mockBlogs as initialData } from '../data/mockBlogs'; // Adjust path if needed
 import { toast } from 'sonner';
 
 const BlogContext = createContext<any>(null);
@@ -105,12 +105,12 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
         
         // Merge real database data with mock data
-        setBlogs([...dbBlogs, ...initialData]);
+        setBlogs([...dbBlogs]);
         setError(null);
       } catch (err) {
         console.error('Failed to fetch blogs from database:', err);
         setError('Could not connect to the database. Please check your server and try again.');
-        setBlogs(initialData); // Use mock data as fallback in case of connection errors
+       // setBlogs(initialData); // Use mock data as fallback in case of connection errors
       } finally {
         setLoading(false);
       }

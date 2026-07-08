@@ -85,7 +85,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ isOpen, onClose }) => {
                 className="text-center py-8"
               >
                 <CheckCircle2 size={64} className="text-green-500 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">You're on the list!</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">You&apos;re on the list!</h2>
                 <p className="text-slate-500 dark:text-slate-400 mt-2">Check your inbox for a surprise.</p>
               </motion.div>
             )}
