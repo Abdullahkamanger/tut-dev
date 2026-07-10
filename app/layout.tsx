@@ -16,10 +16,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// export const metadata: Metadata = {
+//   title: "Tut-Dev",
+//   description: "A platform for developers to share their knowledge and ideas. and Best possible read and go tutorials.",
+// };
+
+
 export const metadata: Metadata = {
-  title: "Tut-Dev",
-  description: "A platform for developers to share their knowledge and ideas. and Best possible read and go tutorials.",
+  title: 'Tut-Dev | Production-Ready Development Tutorials',
+  description: 'An optimized blogging platform for developers to share high-quality technical tutorials, MERN stack guides, hardware configurations, and optimization tips.',
+  openGraph: {
+    title: 'Tut-Dev | Engineering Tutorials Platform',
+    description: 'An optimized blogging platform for developers to share high-quality technical tutorials.',
+    url: 'https://tut-dev.vercel.app',
+    siteName: 'Tut-Dev',
+    images: [
+      {
+        url: 'https://tut-dev.vercel.app/main-og-cover.png', // Add a nice app overview image here later
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tut-Dev | Engineering Tutorials Platform',
+    description: 'An optimized blogging platform for developers to share technical tricks.',
+  },
 };
+
 
 export default function RootLayout({
   children,

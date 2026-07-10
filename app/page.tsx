@@ -7,6 +7,8 @@ import BlogFilters from '../components/blog/BlogFilters';
 import { useBlogs } from '../context/BlogContext';
 import { parseEditorJSContent } from '../lib/content-parser';
 
+
+
 interface Blog {
   id: string | number;
   title: string;

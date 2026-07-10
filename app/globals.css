@@ -1,4 +1,6 @@
+/* 1. Base Imports MUST be at the very top */
 @import "tailwindcss";
+@import "highlight.js/styles/github.css"; /* Light mode fallback layout rules */
 
 @theme {
   --color-indigo-50: #eef2ff;
@@ -43,3 +45,16 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* 2. Overrides for Highlight.js when .dark class is active */
+.dark pre code.hljs {
+  background: var(--color-slate-950) !important;
+  color: #c9d1d9 !important; /* GitHub dark default text */
+}
+
+/* Target specific syntax tokens when inside dark mode */
+.dark .hljs-keyword, .dark .hljs-operator { color: #ff7b72 !important; }
+.dark .hljs-string { color: #a5d6ff !important; }
+.dark .hljs-comment { color: #8b949e !important; }
+.dark .hljs-function, .dark .hljs-title { color: #d2a6ff !important; }
+.dark .hljs-params { color: #c9d1d9 !important; }
+.dark .hljs-number { color: #79c0ff !important; }

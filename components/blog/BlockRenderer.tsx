@@ -1,5 +1,6 @@
 'use client';
-
+import { useEffect, useRef } from 'react';
+import hljs from 'highlight.js';
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 
@@ -38,6 +39,16 @@ interface BlockRendererProps {
 // ---------------------------------------------------------------------------
 const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
   const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
+
+  // Trigger syntax highlighting when component mounts or when code content changes
+  useEffect(() => {
+    if (codeRef.current) {
+      // Clear previous highlighting data attribute if text updates
+      codeRef.current.removeAttribute('data-highlighted');
+      hljs.highlightElement(codeRef.current);
+    }
+  }, [code]);
 
   const handleCopy = async () => {
     try {
@@ -45,7 +56,6 @@ const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const el = document.createElement('textarea');
       el.value = code;
       document.body.appendChild(el);
@@ -83,8 +93,13 @@ const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
         )}
       </button>
 
-      <pre className="bg-slate-900 dark:bg-slate-950 text-emerald-400 rounded-2xl p-6 pt-10 overflow-x-auto text-sm font-mono">
-        <code>{code}</code>
+      {/* Tailwind Note: Removed "text-emerald-400" from <pre> so highlight.js 
+        can handle the exact syntax token colors natively!
+      */}
+      <pre className="bg-slate-900 dark:bg-slate-950 rounded-2xl p-6 pt-10 overflow-x-auto text-sm font-mono">
+        <code ref={codeRef}>
+          {code}
+        </code>
       </pre>
     </div>
   );

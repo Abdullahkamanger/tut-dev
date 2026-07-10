@@ -39,7 +39,7 @@ interface Blog {
 
 const BlogDetail: React.FC = () => {
   const [copied, setCopied] = useState<boolean>(false);
-  const [fetchedBlog, setFetchedBlog] = useState<any>(null);
+  const [fetchedBlog, setFetchedBlog] = useState<Blog | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const params = useParams();
   const id = params?.id as string;
@@ -156,6 +156,28 @@ const BlogDetail: React.FC = () => {
     return `${time} min read`;
   };
 
+
+  const getSeoDescription = () => {
+    if (blog.description) return blog.description;
+    
+    try {
+      const contentObj = typeof blog.content === 'string' ? JSON.parse(blog.content) : blog.content;
+      if (contentObj && contentObj.blocks) {
+        // Find the first paragraph block to use as the snippet
+        const firstParagraph = contentObj.blocks.find((b: any) => b.type === 'paragraph');
+        if (firstParagraph?.data?.text) {
+          return firstParagraph.data.text.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+        }
+      }
+    } catch (e) {
+      // Fallback if parsing fails
+    }
+    return `${blog.title} - A technical tutorial on Tut-Dev.`;
+  };
+
+  const seoDesc = getSeoDescription();
+
+
   const parseAuthorBio = (bio?: string) => {
     if (!bio) return null;
     try {
@@ -177,10 +199,35 @@ const BlogDetail: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{blog.title} | ModernBlog</title>
-        <meta name="description" content={blog.description} />
+
+
+
+
+     <Helmet>
+        {/* Standard Search Engine Tags */}
+        <title>{blog.title} | Tut-Dev</title>
+        <meta name="description" content={seoDesc} />
+        <meta name="keywords" content={`${blog.category || 'Development'}, Tech Blog, Programming, Tutorial`} />
+        
+        {/* OpenGraph Tags (Facebook, LinkedIn, Discord previews) */}
+        <meta property="og:title" content={`${blog.title} | Tut-Dev`} />
+        <meta property="og:description" content={seoDesc} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={typeof window !== "undefined" ? window.location.href : `https://tut-dev.vercel.app/blog/${id}`} />
+        <meta property="og:image" content={blog.image} />
+        <meta property="og:site_name" content="Tut-Dev" />
+        
+        {/* Twitter Card Layout Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${blog.title} | Tut-Dev`} />
+        <meta name="twitter:description" content={seoDesc} />
+        <meta name="twitter:image" content={blog.image} />
       </Helmet>
+
+
+
+
+
 
       {/* Animated Reading Progress Bar */}
       <motion.div
@@ -208,7 +255,7 @@ const BlogDetail: React.FC = () => {
         {/* Hero Image with Parallax */}
         <div className="relative h-[400px] w-full overflow-hidden rounded-3xl mb-10 shadow-2xl">
           <motion.img
-            // @ts-ignore
+            
             layoutId={`img-${blog.id}`}
             src={blog.image}
             alt={blog.title}
