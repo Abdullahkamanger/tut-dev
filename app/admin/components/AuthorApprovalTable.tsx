@@ -46,6 +46,7 @@ const AuthorApprovalTable = () => {
   if (isLoading) {
     return (
       <div className="p-20 text-center text-slate-500 font-medium flex items-center justify-center gap-2">
+        
         <Loader2 className="h-5 w-5 animate-spin" />
         Loading pending authors...
       </div>
