@@ -20,9 +20,13 @@ const geistMono = Geist_Mono({
 //   title: "Tut-Dev",
 //   description: "A platform for developers to share their knowledge and ideas. and Best possible read and go tutorials.",
 // };
-
-
 export const metadata: Metadata = {
+
+
+
+  verification: {
+    google: "rcZn9PwjeaCJZDFxEfpCFVacAO4DymUnr4Wh1rd7Vlg",
+  },
   title: 'Tut-Dev | Production-Ready Development Tutorials',
   description: 'An optimized blogging platform for developers to share high-quality technical tutorials, MERN stack guides, hardware configurations, and optimization tips.',
   openGraph: {
